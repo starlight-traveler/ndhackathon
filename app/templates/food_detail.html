@@ -1,40 +1,209 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="food-detail-container">
-    <h2>{{ food.name }}</h2>
-    <p>{{ food.description }}</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <div class="nutrition-widget">
-        <h3>Nutrition per 100g</h3>
-        <ul>
+<div class="food-container">
+    <h2>{{ food.name }}</h2>
+    <p class="description">{{ food.description }}</p>
+
+    <div class="nutrition-section high-priority">
+        <h3>Key Nutritional Info (per 100g)</h3>
+        {% set important_nutrients = ['calories', 'total_fat', 'protein', 'cholesterol', 'carbohydrates', 'dietary_fiber', 'sodium'] %}
+        <div class="nutrients-grid">
+            {% for nutrient in important_nutrients %}
+                {% if nutrient in food.nutrition_100g %}
+                <div class="nutrient-card">
+                    <span class="nutrient-name">{{ nutrient.replace('_', ' ').title() }}</span>
+                    <span class="nutrient-value">{{ food.nutrition_100g[nutrient] }}</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (food.nutrition_100g[nutrient] / daily_values[nutrient] * 100) | round(0, 'ceil') }}%;"></div>
+                    </div>
+                    <small>{{ (food.nutrition_100g[nutrient] / daily_values[nutrient] * 100) | round(1) }}% of daily value</small>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="nutrition-section detailed">
+        <h3>Detailed Nutritional Info</h3>
+        <div class="nutrients-grid">
             {% for nutrient, value in food.nutrition_100g.items() %}
-                <li><strong>{{ nutrient.replace('_',' ').title() }}:</strong> {{ value }}</li>
+                {% if nutrient not in important_nutrients %}
+                <div class="nutrient-card detailed-card">
+                    <span class="nutrient-name">{{ nutrient.replace('_', ' ').title() }}</span>
+                    <span class="nutrient-value">{{ value }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if food.source %}
+    <div class="source-section">
+        <h3>Data Sources</h3>
+        <ul>
+            {% for src in food.source %}
+                <li class="source-item">
+                    <a href="{{ src.url }}" target="_blank">{{ src.database }}: {{ src.name }}</a>
+                </li>
             {% endfor %}
         </ul>
+    </div>
+    {% endif %}
+
+    <div class="burn-calculator">
+        <h3>Burn Time Calculator</h3>
+        <div class="activity">
+            <strong>Calories:</strong> <span id="calories">{{ food.nutrition_100g.get('calories', 0) }}</span> kcal
+            <div class="activity-item">🚶 Walking (~4 kcal/min): <span id="walk-time"></span></div>
+            <div class="activity-item">🏃 Running (~10 kcal/min): <span id="run-time"></span></div>
+            <div class="activity-item">🚴 Cycling (~8 kcal/min): <span id="cycle-time"></span></div>
+        </div>
     </div>
 
     <a href="{{ url_for('main.indexer') }}" class="back-btn">← Back to Search</a>
 </div>
 
+<script>
+    const calories = parseFloat(document.getElementById('calories').innerText);
+    document.getElementById('walk-time').innerText = (calories / 4).toFixed(1) + ' minutes';
+    document.getElementById('run-time').innerText = (calories / 10).toFixed(1) + ' minutes';
+    document.getElementById('cycle-time').innerText = (calories / 8).toFixed(1) + ' minutes';
+</script>
+
 <style>
-.food-detail-container {
-    padding:25px; background:#fefefe; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.1); animation:fadeIn 0.5s ease-out;
+body, .food-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
 }
-.nutrition-widget {
-    margin-top:20px; padding:15px; background:#fafafa; border-radius:8px; box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);
+.food-container {
+    padding: 30px;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    animation: fadeIn 0.6s ease-out;
 }
-.nutrition-widget ul {
-    columns:2; list-style:none; padding:0;
+h2, h3 {
+    font-weight: 600;
+}
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+}
+.nutrition-section {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #f3f6fb;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+}
+.high-priority {
+    border-left: 6px solid #4caf50;
+}
+.detailed {
+    margin-top: 20px;
+}
+.nutrients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+.nutrient-card {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    text-align: center;
+    position: relative;
+}
+.nutrient-name {
+    font-size: 0.9rem;
+    color: #777;
+}
+.nutrient-value {
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+.progress-fill {
+    height: 100%;
+    background-color: #4caf50;
+}
+.detailed-card {
+    background-color: #fdfdfd;
+    color: #666;
+}
+/* Blue outline for Burn Calculator */
+.burn-calculator {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #f3f6fb;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 6px solid #2196F3;
+}
+/* Purple outline for Sources */
+.source-section {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #f3f6fb;
+    border-radius: 12px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 6px solid #9c27b0;
+    padding-left: 15px;
+}
+.source-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+.source-item {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #9c27b0;
+    border-radius: 8px;
+    background-color: #fff;
+}
+.source-item a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.source-item a:hover {
+    text-decoration: underline;
+}
+.burn-calculator .activity-item {
+    margin-top: 8px;
+    font-size: 1em;
+    color: #444;
 }
 .back-btn {
-    display:inline-block; margin-top:20px; padding:10px 15px; background-color:#000; color:white; border-radius:8px; text-decoration:none; transition:0.3s;
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
 }
 .back-btn:hover {
-    background-color:#333;
+    background-color: #000;
 }
 @keyframes fadeIn {
-    from {opacity:0; transform:translateY(20px);}
-    to {opacity:1; transform:translateY(0);}
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
 }
 </style>
 {% endblock %}

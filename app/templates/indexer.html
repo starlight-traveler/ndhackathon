@@ -1,61 +1,141 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="title">Food Indexer</h2>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-<form method="post" class="search-form">
-    <input type="text" name="query" placeholder="Search food items..." value="{{ query }}" required>
-    <button type="submit">Search</button>
-</form>
+<div class="indexer-container">
+    <h2 class="title">🔎 Food Indexer</h2>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="error-messages">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+    <form method="post" class="search-form">
+        <input type="text" name="query" placeholder="Search food items..." value="{{ query }}" required>
+        <button type="submit">Search</button>
+    </form>
 
-{% if results %}
-    <h3>Search Results:</h3>
-    <div class="results-container">
-        {% for id, name, description in results %}
-        <a href="{{ url_for('main.food_detail', food_id=id) }}" class="result-item">
-            <h4>{{ name }}</h4>
-            <p>{{ description[:120] }}...</p>
-        </a>
-        {% endfor %}
-    </div>
-{% endif %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="error-messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% if results %}
+        <h3 class="results-header">✨ Results for "{{ query }}":</h3>
+        <div class="results-container">
+            {% for id, name, description in results %}
+            <a href="{{ url_for('main.food_detail', food_id=id) }}" class="result-card">
+                <h4>{{ name }}</h4>
+                <p>{{ description[:100] }}...</p>
+                <div class="quick-facts">
+                    {% set facts = get_food_facts(id) %}
+                    {% if facts %}
+                        <span>🔥 Calories: <strong>{{ facts.calories }}</strong></span>
+                        <span>🍗 Protein: <strong>{{ facts.protein }}g</strong></span>
+                        <span>🥑 Fat: <strong>{{ facts.total_fat }}g</strong></span>
+                    {% else %}
+                        <span>Nutrition details available</span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 
 <style>
+body, .indexer-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4f9;
+    color: #333;
+}
+.indexer-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    animation: fadeIn 0.6s ease;
+}
 .title {
-    font-size: 2em; text-align:center; margin-bottom: 20px;
+    font-size: 2.2em;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #222;
 }
 .search-form {
-    display:flex; gap:10px; justify-content:center; margin-bottom:20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 input[type="text"] {
-    padding:12px; width:60%; border-radius:8px; border:1px solid #ddd; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    padding: 12px;
+    width: 60%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 1rem;
 }
 button {
-    padding:12px 20px; border-radius:8px; border:none; background-color:#333; color:white; cursor:pointer; transition:0.3s;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #3f51b5;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 500;
 }
 button:hover {
-    background-color:#000;
+    background-color: #303f9f;
+}
+.results-header {
+    margin: 20px 0 10px;
+    font-size: 1.4em;
+    text-align: center;
 }
 .results-container {
-    display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
 }
-.result-item {
-    padding:15px; background:#fafafa; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); text-decoration:none; color:black; transition:0.3s;
+.result-card {
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: #444;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
-.result-item:hover {
-    transform:translateY(-5px); box-shadow:0 8px 16px rgba(0,0,0,0.15);
+.result-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+.result-card h4 {
+    margin-bottom: 8px;
+    color: #111;
+}
+.quick-facts {
+    margin-top: 12px;
+    font-size: 0.9em;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 .error-messages {
-    color:red; text-align:center;
+    color: #e74c3c;
+    text-align: center;
+    list-style: none;
+    padding: 0;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 {% endblock %}

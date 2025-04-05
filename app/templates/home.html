@@ -1,33 +1,151 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h2>Welcome to OneTable</h2>
-    <p>Discover fun facts and explore the world of food with our interactive widgets!</p>
-    
-    <div class="widget-container">
-        <div class="left-column">
-            <div class="widget square">
-                <h3>Today's Special</h3>
-                <p>Enjoy a curated selection of food items and culinary inspiration.</p>
-            </div>
-            <div class="widget square">
-                <h3>Fun Facts About Food</h3>
-                {% if fun_facts %}
-                    <ul>
-                    {% for fact in fun_facts %}
-                        <li>{{ fact }}</li>
-                    {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No fun facts available at the moment.</p>
-                {% endif %}
-            </div>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div class="tracker-container">
+  <!-- Left column: Nutrient Tracker -->
+  <div class="tracker-left">
+    <h2>Daily Nutrient Tracker</h2>
+    <div class="tracker">
+      {% set nutrients = ['calories', 'total_fat', 'protein', 'cholesterol', 'carbohydrates', 'dietary_fiber', 'sodium'] %}
+      {% for nutrient in nutrients %}
+      <div class="nutrient-card">
+        <span class="nutrient-name">{{ nutrient.replace('_', ' ').title() }}</span>
+        <span class="nutrient-value">
+          {{ tracker[nutrient] if tracker[nutrient] is defined else 0 }} / {{ daily_values[nutrient] }}
+        </span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: {{ ((tracker[nutrient] if tracker[nutrient] is defined else 0) / daily_values[nutrient] * 100) | round(0, 'ceil') }}%;"></div>
         </div>
-        <div class="right-column">
-            <div class="widget long">
-                <h3>Did You Know?</h3>
-                <p>Food has been a unifying force throughout human history, inspiring innovation and cultural exchange.</p>
-            </div>
-        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
+
+  <!-- Right column: Update Form -->
+  <div class="tracker-right">
+    <h2>Update Your Tracker</h2>
+    <form method="post" action="{{ url_for('main.update_tracker') }}">
+      <h3>Personal Information</h3>
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" name="age" id="age" value="{{ user_info.age or '' }}" required>
+      </div>
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" step="0.1" name="weight" id="weight" value="{{ user_info.weight or '' }}" required>
+      </div>
+      <div class="form-group">
+        <label for="height">Height (cm):</label>
+        <input type="number" step="0.1" name="height" id="height" value="{{ user_info.height or '' }}" required>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select name="gender" id="gender" required>
+          <option value="male" {% if user_info.gender == 'male' %}selected{% endif %}>Male</option>
+          <option value="female" {% if user_info.gender == 'female' %}selected{% endif %}>Female</option>
+        </select>
+      </div>
+      <h3>Add Food Consumption</h3>
+      <div class="form-group">
+        <label for="food">Food Name:</label>
+        <input type="text" name="food" id="food" placeholder="e.g., Chicken Breast">
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity Consumed (grams):</label>
+        <input type="number" name="quantity" id="quantity" placeholder="e.g., 100">
+      </div>
+      <button type="submit">Update Tracker</button>
+    </form>
+  </div>
+</div>
+
+<style>
+/* Overall page styling */
+body, .tracker-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+}
+.tracker-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+/* Left Column: Tracker display */
+.tracker-left {
+    flex: 2;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+.tracker-left h2 {
+    font-weight: 600;
+}
+.tracker {
+    margin-top: 20px;
+}
+.nutrient-card {
+    margin-bottom: 15px;
+}
+.nutrient-name {
+    font-size: 0.9rem;
+    color: #777;
+}
+.nutrient-value {
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    display: block;
+}
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    background-color: #4caf50;
+}
+/* Right Column: Update form */
+.tracker-right {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+.tracker-right h2 {
+    font-weight: 600;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+button {
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #333;
+}
+</style>
 {% endblock %}
