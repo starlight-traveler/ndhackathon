@@ -13,6 +13,9 @@ main_bp = Blueprint('main', __name__)
 VALID_USERNAME = "onetable"
 VALID_PASSWORD = "flask123"
 
+@main_bp.route('/')
+def base():
+    return render_template('intro.html')
 @main_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
