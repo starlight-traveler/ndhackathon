@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Login to OneTable</h2>
+    <div class="blurb">
+        <p>Please log in for cutomized access to a nutrional plan and facts!</p>
+    </div>
+    <form method="post" action="{{ url_for('main.login') }}">
+        <div>
+            <label for="username">Username:</label><br>
+            <input type="text" name="username" id="username" placeholder="Enter your username" required>
+        </div>
+        <br>
+        <div>
+            <label for="password">Password:</label><br>
+            <input type="password" name="password" id="password" placeholder="Enter your password" required>
+        </div>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+{% endblock %}

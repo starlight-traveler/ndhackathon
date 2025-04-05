@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Thank You!</h2>
+    <p>Your responses have been recorded. Here are your answers:</p>
+    <ul>
+        <li>Favorite Food: {{ answers.favorite_food }}</li>
+        <li>Cuisine Preference: {{ answers.cuisine_preference }}</li>
+        <li>Dietary Restrictions: {{ answers.dietary_restrictions }}</li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Welcome to OneTable</h2>
+    <p>Discover fun facts and explore the world of food with our interactive widgets!</p>
+    
+    <div class="widget-container">
+        <div class="left-column">
+            <div class="widget square">
+                <h3>Today's Special</h3>
+                <p>Enjoy a curated selection of food items and culinary inspiration.</p>
+            </div>
+            <div class="widget square">
+                <h3>Fun Facts About Food</h3>
+                {% if fun_facts %}
+                    <ul>
+                    {% for fact in fun_facts %}
+                        <li>{{ fact }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No fun facts available at the moment.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="widget long">
+                <h3>Did You Know?</h3>
+                <p>Food has been a unifying force throughout human history, inspiring innovation and cultural exchange.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

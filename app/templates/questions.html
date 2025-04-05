@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Food Preferences Survey</h2>
+    <p>Please answer the following questions about your food preferences:</p>
+    <form method="post" action="{{ url_for('main.questions') }}">
+        <div>
+            <label for="favorite_food">What is your favorite food?</label><br>
+            <input type="text" name="favorite_food" id="favorite_food" placeholder="e.g. Pizza">
+        </div>
+        <br>
+        <div>
+            <label for="cuisine_preference">What cuisine do you prefer?</label><br>
+            <input type="text" name="cuisine_preference" id="cuisine_preference" placeholder="e.g. Italian">
+        </div>
+        <br>
+        <div>
+            <label for="dietary_restrictions">Any dietary restrictions?</label><br>
+            <input type="text" name="dietary_restrictions" id="dietary_restrictions" placeholder="e.g. None">
+        </div>
+        <br>
+        <button type="submit">Submit Answers</button>
+    </form>
+{% endblock %}

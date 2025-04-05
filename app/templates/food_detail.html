@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="food-detail-container">
+    <h2>{{ food.name }}</h2>
+    <p>{{ food.description }}</p>
+
+    <div class="nutrition-widget">
+        <h3>Nutrition per 100g</h3>
+        <ul>
+            {% for nutrient, value in food.nutrition_100g.items() %}
+                <li><strong>{{ nutrient.replace('_',' ').title() }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{{ url_for('main.indexer') }}" class="back-btn">← Back to Search</a>
+</div>
+
+<style>
+.food-detail-container {
+    padding:25px; background:#fefefe; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.1); animation:fadeIn 0.5s ease-out;
+}
+.nutrition-widget {
+    margin-top:20px; padding:15px; background:#fafafa; border-radius:8px; box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);
+}
+.nutrition-widget ul {
+    columns:2; list-style:none; padding:0;
+}
+.back-btn {
+    display:inline-block; margin-top:20px; padding:10px 15px; background-color:#000; color:white; border-radius:8px; text-decoration:none; transition:0.3s;
+}
+.back-btn:hover {
+    background-color:#333;
+}
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+}
+</style>
+{% endblock %}
