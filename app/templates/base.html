@@ -147,6 +147,7 @@
             <h1>OneTable</h1>
         </div>
         <nav>
+            <a href="{{ url_for('main.order') }}">Request</a>
             <a href="{{ url_for('main.indexer') }}">Index</a>
             <a href="{{ url_for('main.foody_ai') }}">Ask AI</a>
             {% if session.get('user') %}
