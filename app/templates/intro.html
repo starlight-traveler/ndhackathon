@@ -1,10 +1,78 @@
 {% extends "base.html" %}
 {% block content %}
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-<h1>OneTable</h1>
-<p> We are bring some food education and stuff to people woooo</p>
+<div class="min-h-screen flex items-center justify-center bg-white font-[Poppins]">
+    <div class="text-center">
+        <h1 style="font-size: 8rem; font-style: bold; margin-bottom: 20px" class="stylizedt">
+            One<span class="table-t">
+              <span class="table-top"></span>
+              <span class="table-leg left-leg"></span>
+              <span class="table-leg right-leg"></span>
+            </span>able
+          </h1>
+          
+
+        <p style="color: #5760706a; font-size: 1.2rem; margin-bottom: 80px; font-style: italic; letter-spacing: -0.025em;">
+        Track meals, get suggestions, and help growing kids stay healthy.
+        </p>
+
+        <button type="button"
+        onclick="window.location.href='/login'"
+        style="margin-bottom: 4.5rem;"
+        class="inline-block bg-green-500 hover:bg-green-600 text-white text-6xl font-semibold py-3 px-8 rounded-full shadow-lg transition duration-200">
+        Get Started
+        </button>
+  </div>
+</div>
+
+<style>
+    .text-center {
+  text-align: center;
+}
+</style>
+
+<style>
+    .stylizedt {
+      font-size: 8rem;
+      /* margin-bottom: 0; */
+      /* font-weight: bold; */
+      text-align: center;
+      /* font-family: sans-serif; */
+    }
+    /* Container for the stylized T */
+    .table-t {
+      position: relative;
+      display: inline-block;
+      margin: 0 -0.15em;  /* Adjust spacing between the stylized T and surrounding text */
+      width: 1em;       /* Adjust the width of the T */
+      height: 1.5em;    /* Adjust the height of the T */
+    }
+    /* Horizontal bar (table top) */
+    .table-top {
+      position: absolute;
+      top: 0.65em;
+      left: 0;
+      right: 0;
+      height: 0.15em;   /* Thickness of the horizontal bar */
+      background: currentColor;
+    }
+    /* Vertical legs for the T */
+    .table-leg {
+      position: absolute;
+      bottom: 0;
+      width: 0.1em;     /* Thickness of the legs */
+      height: 0.7em;    /* Leg height */
+      background: currentColor;
+    }
+    .left-leg {
+      left: 30%;        /* Position the left leg (20% from left) */
+    }
+    .right-leg {
+      right: 30%;       /* Position the right leg (20% from right) */
+    }
+</style>
 
 {% endblock %}
 

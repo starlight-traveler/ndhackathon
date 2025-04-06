@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OneTable Stylized T</title>
+  <style>
+    .stylizedt {
+      font-size: 8rem;
+      margin-bottom: 0;
+      font-weight: bold;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    /* Container for the stylized T */
+    .table-t {
+      position: relative;
+      display: inline-block;
+      margin: 0 0.5em;  /* Adjust spacing between the stylized T and surrounding text */
+      width: 1em;       /* Adjust the width of the T */
+      height: 1.5em;    /* Adjust the height of the T */
+    }
+    /* Horizontal bar (table top) */
+    .table-top {
+      position: absolute;
+      top: 0.65em;
+      left: 0;
+      right: 0;
+      height: 0.15em;   /* Thickness of the horizontal bar */
+      background: currentColor;
+    }
+    /* Vertical legs for the T */
+    .table-leg {
+      position: absolute;
+      bottom: 0;
+      width: 0.1em;     /* Thickness of the legs */
+      height: 0.7em;    /* Leg height */
+      background: currentColor;
+    }
+    .left-leg {
+      left: 30%;        /* Position the left leg (20% from left) */
+    }
+    .right-leg {
+      right: 30%;       /* Position the right leg (20% from right) */
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="stylizedt">
+  One<!-- Stylized T with two legs -->
+  <span class="table-t">
+    <span class="table-top"></span>
+    <span class="table-leg left-leg"></span>
+    <span class="table-leg right-leg"></span>
+  </span>able
+</h1>
+
+</body>
+</html>
