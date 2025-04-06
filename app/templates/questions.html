@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Food Preferences Survey</h2>
-    <p>Please answer the following questions about your food preferences:</p>
-    <form method="post" action="{{ url_for('main.questions') }}">
+    <h2>Request Groceries</h2>
+    <p>Please answer the following questions to request groceries for your household:</p>
+    <form method="post" action="{{ url_for('main.order') }}">
         <div>
-            <label for="favorite_food">What is your favorite food?</label><br>
-            <input type="text" name="favorite_food" id="favorite_food" placeholder="e.g. Pizza">
+            <label for="adults">How many adults are in your household</label><br>
+            <input type="number" name="adults" id="adults" placeholder="e.g. 1">
         </div>
         <br>
         <div>
-            <label for="cuisine_preference">What cuisine do you prefer?</label><br>
-            <input type="text" name="cuisine_preference" id="cuisine_preference" placeholder="e.g. Italian">
+            <label for="children">How many children are in your household?</label><br>
+            <input type="number" name="children" id="children" placeholder="e.g. 3">
         </div>
         <br>
         <div>
-            <label for="dietary_restrictions">Any dietary restrictions?</label><br>
+            <label for="dietary_restrictions">Are there any dietary restrictions in your household?</label><br>
             <input type="text" name="dietary_restrictions" id="dietary_restrictions" placeholder="e.g. None">
+        </div>
+        <br>
+        <div>
+            <label for="address">What is your address for delivery?</label><br>
+            <input type="text" name="address" id="address" placeholder="e.g. 21 Main St, Town, Missouri, 61231">
         </div>
         <br>
         <button type="submit">Submit Answers</button>

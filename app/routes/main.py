@@ -16,6 +16,7 @@ VALID_PASSWORD = "flask123"
 @main_bp.route('/')
 def base():
     return render_template('intro.html')
+#@main_bp.route()
 @main_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -153,18 +154,41 @@ def update_tracker():
     flash("Tracker updated!")
     return redirect(url_for('main.home'))
 
-@main_bp.route('/questions', methods=['GET', 'POST'])
-def questions():
+@main_bp.route('/order', methods=['GET','POST'])
+# request syntax for html forms and sqlite queries helped with AI
+def order():
+    if not session.get('user'):
+        flash("Log in to make request")
+        return redirect(url_for('main.login'))
+    
+    
+    # Collect answers from the form; using placeholders if none provided.
     if request.method == 'POST':
-        # Collect answers from the form; using placeholders if none provided.
         answers = {
-            'favorite_food': request.form.get('favorite_food', 'Placeholder answer'),
-            'cuisine_preference': request.form.get('cuisine_preference', 'Placeholder answer'),
-            'dietary_restrictions': request.form.get('dietary_restrictions', 'Placeholder answer')
+            'user':session.get('user'),
+            'children': request.form.get('children'),
+            'adults': request.form.get('adults'),
+            'diet_restrictions': request.form.get('dietary_restrictions'),
+            'address': request.form.get('address'),
         }
         app.logger.info("Received answers: %s", answers)
-        # In a real application, you would store these in a database.
-        return render_template('thankyou.html', answers=answers)
+        # connect to orders db
+        conn = sqlite3.connect('orders.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO orders (username, children, adults, address, restrictions)
+            VALUES (?, ?, ?, ?, ?)
+            ''', (answers.get('user'), 
+                   int(answers.get('children')), 
+                   int(answers.get('adults')), 
+                   answers.get('diet_restrictions'), 
+                   answers.get('address')
+            ))
+        conn.commit()
+        conn.close()
+        app.logger.info("Added %s to orders.db", answers)
+        return render_template('questions.html')
+
     return render_template('questions.html')
 
 @main_bp.route('/indexer', methods=['GET', 'POST'])
