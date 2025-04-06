@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="order-detail-container">
+    <h2>📦 Order #{{ order.id }}</h2>
+
+    <div class="order-info">
+        <p><strong>👶 Children:</strong> {{ order.children }}</p>
+        <p><strong>🧑 Adults:</strong> {{ order.adults }}</p>
+        <p><strong>📍 Address:</strong> {{ order.address }}</p>
+        {% if order.restrictions %}
+            <p><strong>⚠️ Restrictions:</strong> {{ order.restrictions }}</p>
+        {% endif %}
+        <p><strong>Status:</strong> {{ '✅ Fulfilled' if order.fulfilled else '⏳ Unfulfilled' }}</p>
+    </div>
+
+    {% if not order.fulfilled %}
+    <form method="POST">
+        <button type="submit" class="fulfill-btn">✅ Mark as Fulfilled</button>
+    </form>
+    {% else %}
+    <p class="fulfilled-msg">This order has already been fulfilled.</p>
+    {% endif %}
+
+    <a href="{{ url_for('main.volunteer') }}" class="back-link">← Back to All Orders</a>
+</div>
+
+<style>
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f4f9;
+    color: #000;
+}
+.order-detail-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+.order-detail-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.order-info p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.fulfill-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.fulfill-btn:hover {
+    background-color: #388e3c;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.fulfilled-msg {
+    text-align: center;
+    color: #888;
+    font-weight: bold;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+

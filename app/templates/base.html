@@ -83,12 +83,10 @@
         .container {
             margin: 40px auto;
             max-width: 900px;
-            background: #fff;
+            background: #f0f4f9;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            animation: fadeInUp 0.8s ease-out;
-        }
+        } 
         .blurb {
             margin-bottom: 20px;
             font-size: 1.1em;
@@ -147,6 +145,8 @@
             <h1>OneTable</h1>
         </div>
         <nav>
+            <a href="{{ url_for('main.base') }}">Home</a>
+            <a href="{{ url_for('main.volunteer') }}">Volunteer</a>
             <a href="{{ url_for('main.order') }}">Request</a>
             <a href="{{ url_for('main.indexer') }}">Index</a>
             <a href="{{ url_for('main.foody_ai') }}">Ask AI</a>

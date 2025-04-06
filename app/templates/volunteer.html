@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<div class="volunteer-container">
+    <h2 class="title">📦 Unfulfilled Requests</h2>
+
+    {% if orders %}
+        <div class="results-container">
+            {% for order in orders %}
+                    <a href="{{ url_for('main.order_detail', order_id=order.id) }}" class="result-card-link">
+                        <div class="result-card">
+                            <h4>Request #{{ order.id }}</h4>
+                            <p><strong>👨‍👩‍👧‍👦 Adults:</strong> {{ order.adults }} | <strong>🧒 Children:</strong> {{ order.children }}</p>
+                            <p><strong>📍 Address:</strong> {{ order.address }}</p>
+                            {% if order.restrictions %}
+                            <p><strong>⚠️ Dietary Restrictions:</strong> {{ order.restrictions }}</p>
+                            {% endif %}
+                        </div>
+                    </a>              
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-results">No orders available right now.</p>
+    {% endif %}
+</div>
+
+<style>
+body, .volunteer-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4f9;
+    color: #333;
+}
+.volunteer-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+.title {
+    font-size: 2.2em;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #222;
+}
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+.result-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+.result-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 5px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: block;
+}
+.result-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+.result-card h4 {
+    margin: 0 0 10px;
+    color: #111;
+}
+.result-card p {
+    margin: 5px 0;
+    color: #444;
+    font-size: 0.95rem;
+}
+.no-results {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}

@@ -1,29 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Request Groceries</h2>
-    <p>Please answer the following questions to request groceries for your household:</p>
-    <form method="post" action="{{ url_for('main.order') }}">
-        <div>
-            <label for="adults">How many adults are in your household</label><br>
-            <input type="number" name="adults" id="adults" placeholder="e.g. 1">
-        </div>
-        <br>
-        <div>
-            <label for="children">How many children are in your household?</label><br>
-            <input type="number" name="children" id="children" placeholder="e.g. 3">
-        </div>
-        <br>
-        <div>
-            <label for="dietary_restrictions">Are there any dietary restrictions in your household?</label><br>
-            <input type="text" name="dietary_restrictions" id="dietary_restrictions" placeholder="e.g. None">
-        </div>
-        <br>
-        <div>
-            <label for="address">What is your address for delivery?</label><br>
-            <input type="text" name="address" id="address" placeholder="e.g. 21 Main St, Town, Missouri, 61231">
-        </div>
-        <br>
-        <button type="submit">Submit Answers</button>
-    </form>
+    <div class="request-container">
+        <h2>Request Groceries</h2>
+        <p>Please answer the following questions to request groceries for your household:</p>
+        <form method="post" action="{{ url_for('main.order') }}">
+            <div>
+                <label for="adults">How many adults are in your household</label><br>
+                <input type="number" name="adults" id="adults" placeholder="e.g. 1">
+            </div>
+            <br>
+            <div>
+                <label for="children">How many children are in your household?</label><br>
+                <input type="number" name="children" id="children" placeholder="e.g. 3">
+            </div>
+            <br>
+            <div>
+                <label for="dietary_restrictions">Are there any dietary restrictions in your household?</label><br>
+                <input type="text" name="dietary_restrictions" id="dietary_restrictions" placeholder="e.g. None">
+            </div>
+            <br>
+            <div>
+                <label for="address">What is your address for delivery?</label><br>
+                <input type="text" name="address" id="address" placeholder="e.g. 21 Main St, Town, Missouri, 61231">
+            </div>
+            <br>
+            <button type="submit">Submit Answers</button>
+        </form>
+    </div>
+
+    <style>
+        body, .request-container {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f0f4f9;
+        color: #333;
+    }
+    .request-container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 20px 50px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    }
+    </style>
 {% endblock %}

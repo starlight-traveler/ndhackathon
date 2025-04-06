@@ -16,7 +16,42 @@ VALID_PASSWORD = "flask123"
 @main_bp.route('/')
 def base():
     return render_template('intro.html')
-#@main_bp.route()
+@main_bp.route('/order/<int:order_id>', methods=['GET', 'POST'])
+def order_detail(order_id):
+    if 'user' not in session:
+        return redirect(url_for('main.login'))
+    if request.method == 'POST':
+        # Update the order's fulfilled status
+        conn = sqlite3.connect('orders.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE orders SET fulfilled = 1 WHERE id = ?", (order_id,))
+        conn.commit()
+        conn.close()
+        flash('Order marked as fulfilled!', 'success')
+        return redirect(url_for('main.order_detail', order_id=order_id))
+        
+    conn = sqlite3.connect('orders.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM orders WHERE id = ?", (order_id,))
+    order = cursor.fetchone()
+    conn.close()
+    
+    if not order:
+        flash("Order not found")
+        return redirect(url_for('main.volunteer'))
+        
+    return render_template('order_detail.html', order=dict(order))
+@main_bp.route('/volunteer')
+def volunteer():
+    conn = sqlite3.connect('orders.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM orders WHERE fulfilled = 0 ORDER BY id DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    orders = [dict(row) for row in rows]
+    return render_template('volunteer.html', orders=orders)
 @main_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -181,15 +216,18 @@ def order():
             ''', (answers.get('user'), 
                    int(answers.get('children')), 
                    int(answers.get('adults')), 
-                   answers.get('diet_restrictions'), 
-                   answers.get('address')
+                   answers.get('address'),
+                   answers.get('diet_restrictions')
+                   
             ))
         conn.commit()
         conn.close()
         app.logger.info("Added %s to orders.db", answers)
-        return render_template('questions.html')
+        return render_template('thankyou.html',answers=answers)
 
     return render_template('questions.html')
+
+
 
 @main_bp.route('/indexer', methods=['GET', 'POST'])
 def indexer():

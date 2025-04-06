@@ -1,11 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Thank You!</h2>
-    <p>Your responses have been recorded. Here are your answers:</p>
-    <ul>
-        <li>Favorite Food: {{ answers.favorite_food }}</li>
-        <li>Cuisine Preference: {{ answers.cuisine_preference }}</li>
-        <li>Dietary Restrictions: {{ answers.dietary_restrictions }}</li>
-    </ul>
+    <div class="thank-you-container">
+
+        <h2>Thank You!</h2>
+        <p>Your request has been processed. Here is a summary:</p>
+        <ul>
+            <li>Adults in Household: {{ answers.adults }}</li>
+            <li>Children in Household: {{ answers.children }}</li>
+            <li>Dietary Restriction(s): {{ answers.diet_restrictions }}</li>
+            <li>Delivery Address: {{ answers.address }}</li>
+        </ul>
+   </div>
+
+<style>
+    body, .thank-you-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f4f9;
+    color: #333;
+}
+.thank-you-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+}
+</style>
 {% endblock %}
+
